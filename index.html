@@ -1,0 +1,573 @@
+<!--
+IZAH - Static Bootstrap Store (HTML + JS)
+Color theme: White + Pink + Black
+Features included:
+- Dynamic product grid driven by `products` array with categories
+- Quantity selection with +/- buttons
+- Add to Cart (stored in memory - no localStorage)
+- Sold Out support (inStock flag)
+- Cart modal with remove item + total
+- Checkout via WhatsApp with prefilled item list
+- Category sections with smooth scrolling
+- Simple animations (CSS + AOS CDN) and subtle UI microinteractions
+- Model video placeholder (replace /assets/video/model.mp4)
+
+How to use:
+1. Save this file as `index.html` in a project folder.
+2. Add your images into `assets/images/` and your model video into `assets/video/model.mp4`.
+3. Edit the `products` array below to add/remove items. Fields: id, name, price, image, inStock, qtyAvailable, category.
+4. Open `index.html` in Chrome (or host on GitHub Pages / Netlify).
+
+Replace WhatsApp number: change `sellerNumber` variable in the script to your full number (country code, no plus, e.g. 919876543210).
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IZAH — Affordable Fashion Jewellery</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- AOS (Animate On Scroll) -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+  <!-- FontAwesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#ffffff; /* white */
+      --primary:#1a1a1a; /* black text */
+      --accent:#ff69b4; /* hot pink */
+      --accent-dark:#e91e63; /* darker pink */
+      --accent-light:#ffb3d9; /* light pink */
+      --muted:#666666;
+      --card-bg: #fff0f5; /* lavender blush */
+    }
+    html,body{height:100%;font-family:'Poppins',sans-serif;background:var(--bg);color:var(--primary);scroll-behavior:smooth}
+    a{color:var(--accent)}
+    .navbar{background:linear-gradient(90deg, rgba(255,240,245,0.95), rgba(255,228,240,0.95));backdrop-filter: blur(4px);border-bottom:1px solid #ffc0cb;}
+    .brand{font-weight:700;letter-spacing:1px;color:var(--primary)}
+
+    /* Hero */
+    .hero{padding:4rem 0 2rem}
+    .hero .title{font-size:2.2rem;font-weight:700;color:var(--primary)}
+    .hero .subtitle{color:var(--muted);margin-top:.4rem}
+
+    /* Product cards */
+    .card{background:var(--card-bg);border:1px solid #ffc0cb;border-radius:14px;box-shadow: 0 2px 8px rgba(255,105,180,0.1);transition: transform 0.3s ease, box-shadow 0.3s ease}
+    .card:hover{transform:translateY(-5px);box-shadow: 0 4px 16px rgba(255,105,180,0.2)}
+    .card-img-top{height:220px;object-fit:cover;border-top-left-radius:14px;border-top-right-radius:14px}
+    .card .name{font-size:.98rem;font-weight:600;color:var(--primary)}
+    .price{color:var(--accent);font-weight:700}
+
+    .btn-accent{background:linear-gradient(90deg,var(--accent),var(--accent-dark));border:0;color:#fff;transition: all 0.3s ease}
+    .btn-accent:hover{background:linear-gradient(90deg,var(--accent-dark),var(--accent));color:#fff;transform:translateY(-2px)}
+    .btn-accent:active,.btn-accent:focus{transform:translateY(1px)}
+
+    .sold-overlay{position:absolute;top:12px;left:12px;background:rgba(0,0,0,.6);padding:6px 10px;border-radius:20px;color:#fff;font-weight:600;font-size:.8rem}
+    .img-sold{filter:grayscale(60%) brightness(.7)}
+
+    /* Cart badge */
+    .cart-badge{position:relative}
+    .cart-count{position:absolute;right:-10px;top:-8px;background:var(--accent);color:#fff;border-radius:50%;padding:3px 7px;font-size:.75rem}
+
+    /* Footer */
+    footer{padding:2rem 0;color:var(--muted);background:linear-gradient(180deg, rgba(255,240,245,0.3), rgba(255,240,245,0.6));margin-top:3rem}
+
+    /* Subtle animations */
+    .fade-up{transform:translateY(6px);opacity:0;transition:all .5s ease-out}
+    .fade-up.in{transform:none;opacity:1}
+
+    /* Video */
+    /* Hero Video Background Section */
+    .video-hero {
+      position: relative;
+      height: 100vh;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .video-hero video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+    }
+
+    .video-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4); /* translucent white layer */
+      z-index: 2;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      text-align: center;
+      color: #000;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .hero-content h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+    }
+
+    .hero-content p {
+      font-size: 1.25rem;
+    }
+
+    .btn-custom {
+      background-color: #ffb6c1;
+      border: none;
+      color: #000;
+      font-weight: 500;
+    }
+
+    .btn-custom:hover {
+      background-color: #ff99aa;
+      color: #fff;
+    }
+    /* Category sections */
+    .category-section{scroll-margin-top: 100px}
+
+    @media(min-width:768px){
+      .card-img-top{height:260px}
+      .hero .title{font-size:2.8rem}
+      .model-video{height:380px}
+    }
+  </style>
+</head>
+<body>
+ <!-- Video Background Section -->
+  <section class="video-hero">
+    <video autoplay muted loop playsinline>
+      <source src="assets/video/model.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <div class="video-overlay"></div>
+    <div class="hero-content container">
+      <h1 data-aos="fade-up">IZAH Jewelry</h1>
+      <p data-aos="fade-up" data-aos-delay="150">Where elegance meets craftsmanship</p>
+      <a href="#necklaces" class="btn btn-custom mt-3" data-aos="fade-up" data-aos-delay="300">Explore Collection</a>
+    </div>
+  </section>
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg sticky-top">
+  <div class="container py-2">
+    <a class="navbar-brand brand" href="#">IZAH</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+      <span class="navbar-toggler-icon"><i class="fa fa-bars" style="color:#1a1a1a"></i></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navmenu">
+      <ul class="navbar-nav ms-auto align-items-center">
+        <li class="nav-item px-2"><a class="nav-link category-link" style="color:#1a1a1a;font-weight:500" href="#necklaces">Necklaces</a></li>
+        <li class="nav-item px-2"><a class="nav-link category-link" style="color:#1a1a1a;font-weight:500" href="#rings">Rings</a></li>
+        <li class="nav-item px-2"><a class="nav-link category-link" style="color:#1a1a1a;font-weight:500" href="#earrings">Earrings</a></li>
+        <li class="nav-item px-2"><a class="nav-link category-link" style="color:#1a1a1a;font-weight:500" href="#bracelets">Bracelets</a></li>
+        <li class="nav-item px-2"><a class="nav-link" style="color:#1a1a1a;font-weight:500" href="#about">About</a></li>
+        <li class="nav-item px-2 cart-badge">
+          <a class="nav-link" style="color:#1a1a1a" href="#cartModal" data-bs-toggle="modal"><i class="fa fa-shopping-bag"></i></a>
+          <span id="cart-count" class="cart-count" style="display:none">0</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-6" data-aos="fade-right">
+        <h1 class="title">Delicate. Trendy. Affordable.</h1>
+        <p class="subtitle">IZAH — minimal fashion jewellery priced for students. Fresh drops every week.</p>
+        <div class="mt-4">
+          <a href="#necklaces" class="btn btn-accent btn-lg me-2">Shop New</a>
+          <a href="#about" class="btn btn-outline-dark btn-lg">Learn More</a>
+        </div>
+      </div>
+
+      <div class="col-md-6" data-aos="fade-left">
+        <!-- model video -->
+        <video class="model-video shadow" autoplay muted loop playsinline>
+          <source src="assets/video/model.mp4" type="video/mp4">
+          <!-- Replace above file with your model video. If not available, this shows nothing but layout remains. -->
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SHOP GRID BY CATEGORIES -->
+<section id="shop" class="pt-4 pb-5">
+  <div class="container">
+    
+    <!-- NECKLACES -->
+    <div id="necklaces" class="category-section mb-5">
+      <h3 class="mb-3" style="color:#1a1a1a;border-bottom:2px solid #ff69b4;display:inline-block;padding-bottom:8px">Necklaces</h3>
+      <div class="product-grid row gy-4">
+        <!-- JS will inject necklace products here -->
+      </div>
+    </div>
+
+    <!-- RINGS -->
+    <div id="rings" class="category-section mb-5">
+      <h3 class="mb-3" style="color:#1a1a1a;border-bottom:2px solid #ff69b4;display:inline-block;padding-bottom:8px">Rings</h3>
+      <div class="product-grid row gy-4">
+        <!-- JS will inject ring products here -->
+      </div>
+    </div>
+
+    <!-- EARRINGS -->
+    <div id="earrings" class="category-section mb-5">
+      <h3 class="mb-3" style="color:#1a1a1a;border-bottom:2px solid #ff69b4;display:inline-block;padding-bottom:8px">Earrings</h3>
+      <div class="product-grid row gy-4">
+        <!-- JS will inject earring products here -->
+      </div>
+    </div>
+
+    <!-- BRACELETS -->
+    <div id="bracelets" class="category-section mb-5">
+      <h3 class="mb-3" style="color:#1a1a1a;border-bottom:2px solid #ff69b4;display:inline-block;padding-bottom:8px">Bracelets</h3>
+      <div class="product-grid row gy-4">
+        <!-- JS will inject bracelet products here -->
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="py-4">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-6" data-aos="fade-right">
+        <h4 style="color:#1a1a1a">About IZAH</h4>
+        <p class="text-muted">IZAH started as a small college project — now we create affordable, on-trend jewellery for students who want style without breaking the bank. We focus on lightweight, durable pieces that photograph well and feel comfortable all-day.</p>
+        <p class="text-muted">Follow us on Instagram for weekly drops and styling tips.</p>
+        <a href="https://instagram.com" target="_blank" class="btn btn-outline-dark btn-sm">Follow @izah</a>
+      </div>
+      <div class="col-md-6" data-aos="fade-left">
+        <div class="ratio ratio-16x9 rounded shadow-sm">
+          <img src="assets/images/hero-sample.jpg" alt="IZAH aesthetic" style="object-fit:cover; width:100%; height:100%; border-radius:10px;border:2px solid #ffc0cb"/>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CART MODAL -->
+<div class="modal fade" id="cartModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content" style="background:#fff;color:#1a1a1a;border:2px solid #ffc0cb">
+      <div class="modal-header" style="border-bottom:1px solid #ffc0cb">
+        <h5 class="modal-title">Your Cart</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div id="cart-items"></div>
+        <div class="d-flex justify-content-between align-items-center mt-3">
+          <div>
+            <small class="text-muted">Shipping info: COD & Prepaid handled via WhatsApp.</small>
+          </div>
+          <div>
+            <strong>Total: </strong> <span id="cart-total">₹0</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="border-top:1px solid #ffc0cb">
+        <button id="clear-cart" class="btn btn-outline-dark">Clear Cart</button>
+        <a id="checkout-whatsapp" class="btn btn-accent" target="_blank">Checkout on WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="mt-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <h5 style="color:#1a1a1a">IZAH</h5>
+        <p class="text-muted">Affordable fashion jewellery for the college look. Weekly drops, limited stocks.</p>
+      </div>
+      <div class="col-md-3">
+        <h6 style="color:#1a1a1a">Contact</h6>
+        <p class="text-muted mb-0"><i class="fa fa-phone"></i> WhatsApp: +91 98765 43210</p>
+        <p class="text-muted"><i class="fa fa-envelope"></i> email@example.com</p>
+      </div>
+      <div class="col-md-3">
+        <h6 style="color:#1a1a1a">Follow</h6>
+        <a href="https://instagram.com" target="_blank" class="btn btn-outline-dark btn-sm"><i class="fa fa-instagram"></i> @izah</a>
+      </div>
+    </div>
+
+    <div class="text-center mt-4 text-muted">© IZAH — All rights reserved</div>
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script>
+  AOS.init({duration:700, once:true});
+
+  // Seller WhatsApp number (change to your number, country code first, no +)
+  const sellerNumber = '919876543210';
+
+  // PRODUCTS DATABASE
+  const products = [
+    {id:1, name: 'Rose Petal Hoops', price: 249, image: 'assets/images/necklace.jpeg', inStock:true, qtyAvailable: 15, category: 'earrings'},
+    {id:2, name: 'Minimal Chain Choker', price: 299, image: 'assets/images/brace.jpeg', inStock:true, qtyAvailable: 8, category: 'necklaces'},
+    {id:3, name: 'Tiny Heart Studs', price: 199, image: 'assets/images/stud1.jpg', inStock:false, qtyAvailable: 0, category: 'earrings'},
+    {id:4, name: 'Stackable Rings Set', price: 279, image: 'assets/images/rings1.jpg', inStock:true, qtyAvailable: 12, category: 'rings'},
+    {id:5, name: 'Pearl Drop Earrings', price: 349, image: 'assets/images/necklace.jpeg', inStock:true, qtyAvailable: 6, category: 'earrings'},
+    {id:6, name: 'Layered Chain Necklace', price: 399, image: 'assets/images/brace.jpeg', inStock:true, qtyAvailable: 10, category: 'necklaces'},
+    {id:7, name: 'Crystal Studs', price: 229, image: 'assets/images/stud1.jpg', inStock:true, qtyAvailable: 20, category: 'earrings'},
+    {id:8, name: 'Gold Band Ring', price: 189, image: 'assets/images/rings1.jpg', inStock:true, qtyAvailable: 18, category: 'rings'},
+    {id:9, name: 'Charm Bracelet', price: 329, image: 'assets/images/necklace.jpeg', inStock:true, qtyAvailable: 7, category: 'bracelets'},
+    {id:10, name: 'Beaded Bracelet', price: 269, image: 'assets/images/brace.jpeg', inStock:true, qtyAvailable: 14, category: 'bracelets'},
+    {id:11, name: 'Silver Hoop Earrings', price: 299, image: 'assets/images/stud1.jpg', inStock:true, qtyAvailable: 9, category: 'earrings'},
+    {id:12, name: 'Statement Ring', price: 349, image: 'assets/images/rings1.jpg', inStock:true, qtyAvailable: 5, category: 'rings'}
+  ];
+
+  // Cart stored in memory (not localStorage)
+  let cart = [];
+
+  // UTIL: format INR
+  const fmtINR = n => '₹' + n.toString();
+
+  // RENDER PRODUCTS
+  function renderProducts(){
+    const categories = ['necklaces', 'rings', 'earrings', 'bracelets'];
+    
+    categories.forEach(cat => {
+      const section = document.querySelector(`#${cat} .product-grid`);
+      section.innerHTML = '';
+      
+      const categoryProducts = products.filter(p => p.category === cat);
+      
+      categoryProducts.forEach(p => {
+        const soldClass = !p.inStock ? 'img-sold' : '';
+        const soldBadge = !p.inStock ? '<div class="sold-overlay">Sold Out</div>' : '';
+        const stockInfo = p.inStock ? `<small class="text-muted">Available: ${p.qtyAvailable}</small>` : '';
+
+        const card = document.createElement('div');
+        card.className = 'col-6 col-md-3';
+        card.innerHTML = `
+          <div class="card shadow-sm" data-aos="zoom-in">
+            <div style="position:relative">
+              <img src="${p.image}" class="card-img-top ${soldClass}" alt="${p.name}">
+              ${soldBadge}
+            </div>
+            <div class="card-body text-center">
+              <div class="name mb-2">${p.name}</div>
+              <div class="price mb-2">${fmtINR(p.price)}</div>
+              ${stockInfo}
+              <div class="mt-3">
+                ${p.inStock ? `
+                  <div class="d-flex align-items-center justify-content-center gap-2 mb-2">
+                    <button class="btn btn-sm btn-outline-dark qty-btn" data-id="${p.id}" data-action="decrease">-</button>
+                    <input type="number" class="form-control form-control-sm text-center qty-input" id="qty-${p.id}" value="1" min="1" max="${p.qtyAvailable}" style="width:60px" readonly>
+                    <button class="btn btn-sm btn-outline-dark qty-btn" data-id="${p.id}" data-action="increase">+</button>
+                  </div>
+                  <button class="btn btn-accent btn-sm add-to-cart" data-id="${p.id}">Add to Cart</button>
+                ` : `<button class="btn btn-secondary btn-sm" disabled>Sold Out</button>`}
+              </div>
+            </div>
+          </div>
+        `;
+        section.appendChild(card);
+      });
+    });
+    
+    attachAddListeners();
+    attachQtyListeners();
+  }
+
+  // CART LOGIC
+  function getCart(){
+    return cart;
+  }
+  function saveCart(c){
+    cart = c;
+    updateCartCount();
+  }
+
+  function addToCart(productId){
+    const product = products.find(x=>x.id===productId);
+    if(!product || !product.inStock) return;
+    
+    const qtyInput = document.getElementById(`qty-${productId}`);
+    const qty = parseInt(qtyInput.value);
+    
+    if(qty > product.qtyAvailable) {
+      showToast(`Only ${product.qtyAvailable} available!`);
+      return;
+    }
+    
+    const currentCart = getCart();
+    currentCart.push({id:product.id, name:product.name, price:product.price, qty: qty});
+    saveCart(currentCart);
+    showToast(`${qty}x ${product.name} added to cart`);
+    
+    // Reset quantity to 1
+    qtyInput.value = 1;
+  }
+
+  function removeFromCart(index){
+    const currentCart = getCart();
+    currentCart.splice(index,1);
+    saveCart(currentCart);
+    renderCartItems();
+  }
+
+  function clearCart(){
+    cart = [];
+    updateCartCount();
+    renderCartItems();
+  }
+
+  function updateCartCount(){
+    const count = getCart().length;
+    const el = document.getElementById('cart-count');
+    if(count>0){ el.style.display='inline-block'; el.innerText = count; } else { el.style.display='none'; }
+  }
+
+  // CART UI
+  function renderCartItems(){
+    const container = document.getElementById('cart-items');
+    const currentCart = getCart();
+    container.innerHTML = '';
+    if(currentCart.length===0){ container.innerHTML = '<p class="text-muted">Your cart is empty.</p>'; document.getElementById('cart-total').innerText = '₹0'; document.getElementById('checkout-whatsapp').href = '#'; return; }
+
+    let total = 0;
+    currentCart.forEach((item, idx) => {
+      const itemTotal = item.price * item.qty;
+      total += itemTotal;
+      const row = document.createElement('div');
+      row.className = 'd-flex align-items-center justify-content-between py-2 border-bottom';
+      row.innerHTML = `
+        <div>
+          <div style="font-weight:600">${item.name}</div>
+          <small class="text-muted">Qty: ${item.qty} × ${fmtINR(item.price)} = ${fmtINR(itemTotal)}</small>
+        </div>
+        <div class="text-end">
+          <div style="font-weight:700">${fmtINR(itemTotal)}</div>
+          <button class="btn btn-sm btn-link text-danger remove-item" data-index="${idx}">Remove</button>
+        </div>
+      `;
+      container.appendChild(row);
+    });
+    document.getElementById('cart-total').innerText = fmtINR(total);
+
+    // prepare whatsapp checkout link
+    let message = encodeURIComponent(`I'm interested in these items from IZAH:%0A`);
+    currentCart.forEach(it => { message += encodeURIComponent(`- ${it.name} (Qty: ${it.qty}) - ₹${it.price * it.qty}%0A`); });
+    message += encodeURIComponent(`Total: ₹${total}%0A`);
+    const waLink = `https://wa.me/${sellerNumber}?text=${message}`;
+    document.getElementById('checkout-whatsapp').href = waLink;
+
+    // attach remove listeners
+    document.querySelectorAll('.remove-item').forEach(btn => {
+      btn.addEventListener('click', e => {
+        const idx = parseInt(e.currentTarget.getAttribute('data-index'));
+        removeFromCart(idx);
+      });
+    });
+  }
+
+  // Attach add-to-cart button listeners
+  function attachAddListeners(){
+    document.querySelectorAll('.add-to-cart').forEach(btn => {
+      btn.addEventListener('click', e => {
+        const id = parseInt(btn.getAttribute('data-id'));
+        addToCart(id);
+        renderCartItems();
+      });
+    });
+  }
+
+  // Attach quantity +/- button listeners
+  function attachQtyListeners(){
+    document.querySelectorAll('.qty-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        const id = parseInt(btn.getAttribute('data-id'));
+        const action = btn.getAttribute('data-action');
+        const product = products.find(p => p.id === id);
+        const qtyInput = document.getElementById(`qty-${id}`);
+        let currentQty = parseInt(qtyInput.value);
+        
+        if(action === 'increase' && currentQty < product.qtyAvailable) {
+          qtyInput.value = currentQty + 1;
+        } else if(action === 'decrease' && currentQty > 1) {
+          qtyInput.value = currentQty - 1;
+        }
+      });
+    });
+  }
+
+  // Smooth scroll for category links
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.category-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href').substring(1);
+        const targetSection = document.getElementById(targetId);
+        if(targetSection) {
+          const navbarHeight = 80;
+          const targetPosition = targetSection.offsetTop - navbarHeight;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+  });
+
+  // Tiny toast
+  function showToast(text){
+    const t = document.createElement('div');
+    t.className = 'position-fixed bottom-0 end-0 m-3 p-3 rounded shadow';
+    t.style.background = 'linear-gradient(135deg, #ff69b4, #e91e63)'; 
+    t.style.color = '#fff'; 
+    t.style.zIndex = 9999; 
+    t.style.fontWeight = '500';
+    t.innerText = text;
+    document.body.appendChild(t);
+    setTimeout(()=>{ t.style.opacity = 0; t.style.transition = 'opacity 0.4s'; setTimeout(()=>t.remove(),400); },1200);
+  }
+
+  // initial render
+  document.addEventListener('DOMContentLoaded', () => {
+    renderProducts();
+    updateCartCount();
+    renderCartItems();
+
+    document.getElementById('clear-cart').addEventListener('click', () => { if(confirm('Clear cart?')) clearCart(); });
+
+    // animate fade-up elements
+    setTimeout(()=>{
+      document.querySelectorAll('.fade-up').forEach(e=>e.classList.add('in'));
+    },200);
+  });
+
+</script>
+</body>
+</html>
