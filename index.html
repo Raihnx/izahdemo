@@ -461,7 +461,7 @@ Replace WhatsApp number: change `sellerNumber` variable in the script to your fu
 
     // prepare whatsapp checkout link
     let message = encodeURIComponent(`I'm interested in these items from IZAH:\n`);
-    currentCart.forEach(it => { message += encodeURIComponent(`- ${it.name} (\nQty: ${it.qty}) - \n₹${it.price * it.qty}`); });
+    currentCart.forEach(it => { message += encodeURIComponent(`- ${it.name} (Qty: ${it.qty}) - ₹${it.price * it.qty}`); });
     message += encodeURIComponent(`\nTotal: ₹${total}%0A`);
     const waLink = `https://wa.me/${sellerNumber}?text=${message}`;
     document.getElementById('checkout-whatsapp').href = waLink;
