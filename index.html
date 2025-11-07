@@ -107,7 +107,7 @@ Replace WhatsApp number: change `sellerNumber` variable in the script to your fu
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.4); /* translucent white layer */
+      
       z-index: 2;
     }
 
@@ -116,7 +116,7 @@ Replace WhatsApp number: change `sellerNumber` variable in the script to your fu
       z-index: 3;
       text-align: center;
       color: #000;
-      top: 50%;
+      top: 85%;
       transform: translateY(-50%);
     }
 
@@ -130,15 +130,17 @@ Replace WhatsApp number: change `sellerNumber` variable in the script to your fu
     }
 
     .btn-custom {
-      background-color: #ffb6c1;
-      border: none;
+     
+     border-radius: 50px;
       color: #000;
       font-weight: 500;
     }
 
     .btn-custom:hover {
-      background-color: #ff99aa;
-      color: #fff;
+      
+      border-radius: 50px;
+      color: #000000;
+      font-weight: 700;
     }
     /* Category sections */
     .category-section{scroll-margin-top: 100px}
@@ -153,15 +155,13 @@ Replace WhatsApp number: change `sellerNumber` variable in the script to your fu
 <body>
  <!-- Video Background Section -->
   <section class="video-hero">
-    <video autoplay muted loop playsinline>
-      <source src="assets/video/model.mp4" type="video/mp4">
+    <video autoplay muted playsinline>
+      <source src="assets/video/model1.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
     <div class="video-overlay"></div>
     <div class="hero-content container">
-      <h1 data-aos="fade-up">IZAH Jewelry</h1>
-      <p data-aos="fade-up" data-aos-delay="150">Where elegance meets craftsmanship</p>
-      <a href="#necklaces" class="btn btn-custom mt-3" data-aos="fade-up" data-aos-delay="300">Explore Collection</a>
+      <a href="#navmenu" class="btn btn-custom mt-3" data-aos="fade-up" data-aos-delay="300">Explore Collection</a>
     </div>
   </section>
 <!-- NAVBAR -->
@@ -204,7 +204,7 @@ Replace WhatsApp number: change `sellerNumber` variable in the script to your fu
       <div class="col-md-6" data-aos="fade-left">
         <!-- model video -->
         <video class="model-video shadow" autoplay muted loop playsinline>
-          <source src="assets/video/model.mp4" type="video/mp4">
+          <source src="assets/video/h.mp4" type="video/mp4">
           <!-- Replace above file with your model video. If not available, this shows nothing but layout remains. -->
           Your browser does not support the video tag.
         </video>
@@ -328,7 +328,7 @@ Replace WhatsApp number: change `sellerNumber` variable in the script to your fu
   AOS.init({duration:700, once:true});
 
   // Seller WhatsApp number (change to your number, country code first, no +)
-  const sellerNumber = '919876543210';
+  const sellerNumber = '918606577577';
 
   // PRODUCTS DATABASE
   const products = [
@@ -365,7 +365,7 @@ Replace WhatsApp number: change `sellerNumber` variable in the script to your fu
       categoryProducts.forEach(p => {
         const soldClass = !p.inStock ? 'img-sold' : '';
         const soldBadge = !p.inStock ? '<div class="sold-overlay">Sold Out</div>' : '';
-        const stockInfo = p.inStock ? `<small class="text-muted">Available: ${p.qtyAvailable}</small>` : '';
+        const stockInfo = p.inStock ? `<small class="text-muted">Qty Available: ${p.qtyAvailable}</small>` : '';
 
         const card = document.createElement('div');
         card.className = 'col-6 col-md-3';
@@ -477,9 +477,9 @@ Replace WhatsApp number: change `sellerNumber` variable in the script to your fu
     document.getElementById('cart-total').innerText = fmtINR(total);
 
     // prepare whatsapp checkout link
-    let message = encodeURIComponent(`I'm interested in these items from IZAH:%0A`);
-    currentCart.forEach(it => { message += encodeURIComponent(`- ${it.name} (Qty: ${it.qty}) - ₹${it.price * it.qty}%0A`); });
-    message += encodeURIComponent(`Total: ₹${total}%0A`);
+    let message = encodeURIComponent(`I'm interested in these items from IZAH:\n`);
+    currentCart.forEach(it => { message += encodeURIComponent(`- ${it.name} (\nQty: ${it.qty}) - \n₹${it.price * it.qty}`); });
+    message += encodeURIComponent(`\nTotal: ₹${total}%0A`);
     const waLink = `https://wa.me/${sellerNumber}?text=${message}`;
     document.getElementById('checkout-whatsapp').href = waLink;
 
