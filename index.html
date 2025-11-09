@@ -16,13 +16,13 @@
 
   <style>
     :root{
-      --bg:#ffffff; /* white */
-      --primary:#1a1a1a; /* black text */
-      --accent:#6e2e4e; /* hot pink */
-      --accent-dark:#e91e63; /* darker pink */
-      --accent-light:#ffb3d9; /* light pink */
+      --bg:#ffffff;
+      --primary:#1a1a1a;
+      --accent:#6e2e4e;
+      --accent-dark:#e91e63;
+      --accent-light:#ffb3d9;
       --muted:#666666;
-      --card-bg: #fff0f5; /* lavender blush */
+      --card-bg: #fff0f5;
     }
     html,body{height:100%;font-family:'Poppins',sans-serif;background:var(--bg);color:var(--primary);scroll-behavior:smooth}
     a{color:var(--accent)}
@@ -31,12 +31,50 @@
     .logo-container{height:45px;display:flex;align-items:center;justify-content:center}
     .logo-img{max-height:35px;width:auto}
     
-    /* Tab Menu */
-    .tab-menu{background:#ffffff;border-bottom:1px solid #ffc0cb;box-shadow: 0 2px 4px rgba(0,0,0,0.05);z-index:1020;padding-top: 0.25rem;}
-    .tab-menu .nav{margin:0}
-    .tab-menu .nav-link{color:#1a1a1a;font-weight:500;padding:0.5rem 2rem;transition:all 0.1s ease;border-bottom:3px solid transparent;margin:0 0.25rem}
-    .tab-menu .nav-link:hover{color:var(--accent);border-bottom-color:var(--accent-light);background:rgba(255,105,180,0.05)}
-    .tab-menu .nav-link.active{color:var(--accent);border-bottom-color:var(--accent-light);background:rgba(255,105,180,0.05)}
+    /* Tab Menu - Mobile First */
+    .tab-menu{
+      background:#ffffff;
+      border-bottom:1px solid #ffc0cb;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      z-index:1020;
+      padding-top: 0.25rem;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+    .tab-menu::-webkit-scrollbar {
+      height: 2px;
+    }
+    .tab-menu::-webkit-scrollbar-thumb {
+      background: var(--accent-light);
+      border-radius: 10px;
+    }
+    .tab-menu .nav{
+      margin:0;
+      flex-wrap: nowrap;
+      width: max-content;
+      min-width: 100%;
+    }
+    .tab-menu .nav-link{
+      color:#1a1a1a;
+      font-weight:500;
+      padding:0.5rem 1rem;
+      transition:all 0.1s ease;
+      border-bottom:3px solid transparent;
+      margin:0 0.1rem;
+      white-space: nowrap;
+      font-size: 0.9rem;
+    }
+    .tab-menu .nav-link:hover{
+      color:var(--accent);
+      border-bottom-color:var(--accent-light);
+      background:rgba(255,105,180,0.05)
+    }
+    .tab-menu .nav-link.active{
+      color:var(--accent);
+      border-bottom-color:var(--accent-light);
+      background:rgba(255,105,180,0.05)
+    }
 
     /* Hero */
     .hero{padding:4rem 0 2rem}
@@ -70,30 +108,30 @@
     /* Footer */
     footer{padding:2rem 0;color:var(--muted);background:linear-gradient(180deg, rgba(255,240,245,0.3), rgba(255,240,245,0.6));margin-top:3rem}
 
-    /* Subtle animations */
-    .fade-up{transform:translateY(6px);opacity:0;transition:all .5s ease-out}
-    .fade-up.in{transform:none;opacity:1}
-
     /* Category sections */
     .category-section{scroll-margin-top: 150px}
 
+    /* Tablet and up */
     @media(min-width:768px){
       .card-img-top{height:260px}
       .hero .title{font-size:2.8rem}
       .hero-carousel{height:500px}
       .logo-img{max-height:40px}
       .category-section{scroll-margin-top: 130px}
+      .tab-menu .nav-link{
+        padding:0.5rem 2rem;
+        margin:0 0.25rem;
+        font-size: 1rem;
+      }
     }
   </style>
 </head>
 <body>
  
-  
 <!-- NAVBAR -->
 <nav class="navbar fixed-top">
   <div class="container-fluid px-4">
     <div class="row w-100 align-items-center">
-      <!-- Cart on left -->
       <div class="col-2 text-start">
         <div class="cart-badge d-inline-block">
           <a class="nav-link p-0" style="color:#1a1a1a;font-size:1.1rem" href="#cartModal" data-bs-toggle="modal">
@@ -103,15 +141,12 @@
         </div>
       </div>
 
-      <!-- Logo centered -->
       <div class="col-8">
         <div class="logo-container">
           <img src="assets/images/logo.jpg" alt="IZAH Logo" class="logo-img">
-          <!-- Replace 'assets/images/logo.png' with your actual logo path -->
         </div>
       </div>
 
-      <!-- Right side spacer -->
       <div class="col-2"></div>
     </div>
   </div>
@@ -119,8 +154,8 @@
 
 <!-- TAB MENU -->
 <nav class="tab-menu fixed-top" style="top:48px">
-  <div class="container-fluid">
-    <ul class="nav nav-pills justify-content-center mb-0 flex-nowrap">
+  <div class="container-fluid px-2">
+    <ul class="nav nav-pills justify-content-start mb-0">
       <li class="nav-item">
         <a class="nav-link category-link" href="#necklaces" data-category="necklaces">Necklaces</a>
       </li>
@@ -151,7 +186,6 @@
       </div>
 
       <div class="col-md-6 mt-4 mt-md-0" data-aos="fade-left">
-        <!-- Carousel -->
         <div class="hero-carousel">
           <div class="carousel-item-custom active">
             <img src="assets/images/necklace.jpeg" alt="Jewellery Collection 1">
@@ -177,42 +211,28 @@
 <section id="shop" class="pt-4 pb-5">
   <div class="container">
     
-    <!-- NECKLACES -->
     <div id="necklaces" class="category-section mb-5">
       <h3 class="mb-3" style="color:#1a1a1a;border-bottom:2px solid #ff69b4;display:inline-block;padding-bottom:8px">Necklaces</h3>
-      <div class="product-grid row gy-4">
-        <!-- JS will inject necklace products here -->
-      </div>
+      <div class="product-grid row gy-4"></div>
     </div>
 
-    <!-- EARRINGS -->
     <div id="earrings" class="category-section mb-5">
       <h3 class="mb-3" style="color:#1a1a1a;border-bottom:2px solid #ff69b4;display:inline-block;padding-bottom:8px">Earrings</h3>
-      <div class="product-grid row gy-4">
-        <!-- JS will inject earring products here -->
-      </div>
+      <div class="product-grid row gy-4"></div>
     </div>
 
-    <!-- BRACELETS -->
     <div id="bracelets" class="category-section mb-5">
       <h3 class="mb-3" style="color:#1a1a1a;border-bottom:2px solid #ff69b4;display:inline-block;padding-bottom:8px">Bracelets</h3>
-      <div class="product-grid row gy-4">
-        <!-- JS will inject bracelet products here -->
-      </div>
+      <div class="product-grid row gy-4"></div>
     </div>
 
-    <!-- RINGS -->
     <div id="rings" class="category-section mb-5">
       <h3 class="mb-3" style="color:#1a1a1a;border-bottom:2px solid #ff69b4;display:inline-block;padding-bottom:8px">Rings</h3>
-      <div class="product-grid row gy-4">
-        <!-- JS will inject ring products here -->
-      </div>
+      <div class="product-grid row gy-4"></div>
     </div>
 
   </div>
 </section>
-
-
 
 <!-- CART MODAL -->
 <div class="modal fade" id="cartModal" tabindex="-1">
@@ -264,16 +284,12 @@
   </div>
 </footer>
 
-<!-- SCRIPTS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 <script>
   AOS.init({duration:700, once:true});
-
-  // Seller WhatsApp number (change to your number, country code first, no +)
   const sellerNumber = '918606577577';
 
-  // PRODUCTS DATABASE
   const products = [
     {id:1, name: 'Rose Petal Hoops', price: 249, image: 'assets/images/necklace.jpeg', inStock:true, qtyAvailable: 15, category: 'earrings'},
     {id:2, name: 'Minimal Chain Choker', price: 299, image: 'assets/images/brace.jpeg', inStock:true, qtyAvailable: 8, category: 'necklaces'},
@@ -289,13 +305,9 @@
     {id:12, name: 'Statement Ring', price: 349, image: 'assets/images/necklace.jpeg', inStock:true, qtyAvailable: 5, category: 'rings'}
   ];
 
-  // Cart stored in memory (not localStorage)
   let cart = [];
-
-  // UTIL: format INR
   const fmtINR = n => '₹' + n.toString();
 
-  // RENDER PRODUCTS
   function renderProducts(){
     const categories = ['necklaces', 'earrings', 'bracelets', 'rings'];
     
@@ -343,14 +355,8 @@
     attachQtyListeners();
   }
 
-  // CART LOGIC
-  function getCart(){
-    return cart;
-  }
-  function saveCart(c){
-    cart = c;
-    updateCartCount();
-  }
+  function getCart(){ return cart; }
+  function saveCart(c){ cart = c; updateCartCount(); }
 
   function addToCart(productId){
     const product = products.find(x=>x.id===productId);
@@ -368,8 +374,6 @@
     currentCart.push({id:product.id, name:product.name, price:product.price, qty: qty});
     saveCart(currentCart);
     showToast(`${qty}x ${product.name} added to cart`);
-    
-    // Reset quantity to 1
     qtyInput.value = 1;
   }
 
@@ -392,12 +396,16 @@
     if(count>0){ el.style.display='inline-block'; el.innerText = count; } else { el.style.display='none'; }
   }
 
-  // CART UI
   function renderCartItems(){
     const container = document.getElementById('cart-items');
     const currentCart = getCart();
     container.innerHTML = '';
-    if(currentCart.length===0){ container.innerHTML = '<p class="text-muted">Your cart is empty.</p>'; document.getElementById('cart-total').innerText = '₹0'; document.getElementById('checkout-whatsapp').href = '#'; return; }
+    if(currentCart.length===0){ 
+      container.innerHTML = '<p class="text-muted">Your cart is empty.</p>'; 
+      document.getElementById('cart-total').innerText = '₹0'; 
+      document.getElementById('checkout-whatsapp').href = '#'; 
+      return; 
+    }
 
     let total = 0;
     currentCart.forEach((item, idx) => {
@@ -419,14 +427,12 @@
     });
     document.getElementById('cart-total').innerText = fmtINR(total);
 
-    // prepare whatsapp checkout link
     let message = encodeURIComponent(`I'm interested in these items from IZAH:\n`);
     currentCart.forEach(it => { message += encodeURIComponent(`\n${it.name} (Qty: ${it.qty}) - ₹${it.price * it.qty}\n`); });
     message += encodeURIComponent(`\nTotal: ₹${total}`);
     const waLink = `https://wa.me/${sellerNumber}?text=${message}`;
     document.getElementById('checkout-whatsapp').href = waLink;
 
-    // attach remove listeners
     document.querySelectorAll('.remove-item').forEach(btn => {
       btn.addEventListener('click', e => {
         const idx = parseInt(e.currentTarget.getAttribute('data-index'));
@@ -435,7 +441,6 @@
     });
   }
 
-  // Attach add-to-cart button listeners
   function attachAddListeners(){
     document.querySelectorAll('.add-to-cart').forEach(btn => {
       btn.addEventListener('click', e => {
@@ -446,7 +451,6 @@
     });
   }
 
-  // Attach quantity +/- button listeners
   function attachQtyListeners(){
     document.querySelectorAll('.qty-btn').forEach(btn => {
       btn.addEventListener('click', e => {
@@ -465,24 +469,19 @@
     });
   }
 
-  // Smooth scroll for category links
   document.addEventListener('DOMContentLoaded', () => {
     const categoryLinks = document.querySelectorAll('.category-link');
     
     categoryLinks.forEach(link => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
-        
-        // Remove active class from all links
         categoryLinks.forEach(l => l.classList.remove('active'));
-        
-        // Add active class to clicked link
         link.classList.add('active');
         
         const targetId = link.getAttribute('href').substring(1);
         const targetSection = document.getElementById(targetId);
         if(targetSection) {
-          const headerHeight = 130; // Header + tab menu height
+          const headerHeight = 130;
           const targetPosition = targetSection.offsetTop - headerHeight;
           window.scrollTo({
             top: targetPosition,
@@ -492,7 +491,6 @@
       });
     });
     
-    // Update active tab on scroll
     window.addEventListener('scroll', () => {
       const sections = document.querySelectorAll('.category-section');
       const scrollPos = window.scrollY + 150;
@@ -514,7 +512,6 @@
     });
   });
 
-  // Tiny toast
   function showToast(text){
     const t = document.createElement('div');
     t.className = 'position-fixed bottom-0 end-0 m-3 p-3 rounded shadow';
@@ -527,17 +524,12 @@
     setTimeout(()=>{ t.style.opacity = 0; t.style.transition = 'opacity 0.4s'; setTimeout(()=>t.remove(),400); },1200);
   }
 
-  // initial render
   document.addEventListener('DOMContentLoaded', () => {
     renderProducts();
     updateCartCount();
     renderCartItems();
-
     document.getElementById('clear-cart').addEventListener('click', () => { if(confirm('Clear cart?')) clearCart(); });
 
-    
-
-    // Carousel auto-slide with synced hero text
     let currentSlide = 0;
     const slides = document.querySelectorAll('.carousel-item-custom');
     const totalSlides = slides.length;
@@ -545,26 +537,17 @@
     const heroTitle = document.getElementById('hero-title');
     
     function nextSlide(){
-      // Fade out text
       heroTitle.classList.add('fade-out');
-      
       setTimeout(() => {
-        // Change slide
         slides[currentSlide].classList.remove('active');
         currentSlide = (currentSlide + 1) % totalSlides;
         slides[currentSlide].classList.add('active');
-        
-        // Update text
         heroTitle.textContent = heroTexts[currentSlide];
-        
-        // Fade in text
         heroTitle.classList.remove('fade-out');
       }, 300);
     }
-    
-    setInterval(nextSlide, 3000); // Change slide every 3 seconds
+    setInterval(nextSlide, 3000);
   });
-
 </script>
 </body>
 </html>
