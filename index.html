@@ -1,26 +1,3 @@
-<!--
-IZAH - Static Bootstrap Store (HTML + JS)
-Color theme: White + Pink + Black
-Features included:
-- Dynamic product grid driven by `products` array with categories
-- Quantity selection with +/- buttons
-- Add to Cart (stored in memory - no localStorage)
-- Sold Out support (inStock flag)
-- Cart modal with remove item + total
-- Checkout via WhatsApp with prefilled item list
-- Category sections with smooth scrolling
-- Simple animations (CSS + AOS CDN) and subtle UI microinteractions
-- Model video placeholder (replace /assets/video/model.mp4)
-
-How to use:
-1. Save this file as `index.html` in a project folder.
-2. Add your images into `assets/images/` and your model video into `assets/video/model.mp4`.
-3. Edit the `products` array below to add/remove items. Fields: id, name, price, image, inStock, qtyAvailable, category.
-4. Open `index.html` in Chrome (or host on GitHub Pages / Netlify).
-
-Replace WhatsApp number: change `sellerNumber` variable in the script to your full number (country code, no plus, e.g. 919876543210).
--->
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -41,7 +18,7 @@ Replace WhatsApp number: change `sellerNumber` variable in the script to your fu
     :root{
       --bg:#ffffff; /* white */
       --primary:#1a1a1a; /* black text */
-      --accent:#ff69b4; /* hot pink */
+      --accent:#6e2e4e; /* hot pink */
       --accent-dark:#e91e63; /* darker pink */
       --accent-light:#ffb3d9; /* light pink */
       --muted:#666666;
@@ -49,13 +26,28 @@ Replace WhatsApp number: change `sellerNumber` variable in the script to your fu
     }
     html,body{height:100%;font-family:'Poppins',sans-serif;background:var(--bg);color:var(--primary);scroll-behavior:smooth}
     a{color:var(--accent)}
-    .navbar{background:linear-gradient(90deg, rgba(255,240,245,0.95), rgba(255,228,240,0.95));backdrop-filter: blur(4px);border-bottom:1px solid #ffc0cb;}
+    .navbar{background:#ffffff;backdrop-filter: blur(4px);border-bottom:1px solid #ffc0cb;box-shadow: 0 2px 4px rgba(0,0,0,0.05);padding:0.25rem 0}
     .brand{font-weight:700;letter-spacing:1px;color:var(--primary)}
+    .logo-container{height:45px;display:flex;align-items:center;justify-content:center}
+    .logo-img{max-height:35px;width:auto}
+    
+    /* Tab Menu */
+    .tab-menu{background:#ffffff;border-bottom:1px solid #ffc0cb;box-shadow: 0 2px 4px rgba(0,0,0,0.05);z-index:1020;padding-top: 0.25rem;}
+    .tab-menu .nav{margin:0}
+    .tab-menu .nav-link{color:#1a1a1a;font-weight:500;padding:0.5rem 2rem;transition:all 0.1s ease;border-bottom:3px solid transparent;margin:0 0.25rem}
+    .tab-menu .nav-link:hover{color:var(--accent);border-bottom-color:var(--accent-light);background:rgba(255,105,180,0.05)}
+    .tab-menu .nav-link.active{color:var(--accent);border-bottom-color:var(--accent-light);background:rgba(255,105,180,0.05)}
 
     /* Hero */
     .hero{padding:4rem 0 2rem}
     .hero .title{font-size:2.2rem;font-weight:700;color:var(--primary)}
     .hero .subtitle{color:var(--muted);margin-top:.4rem}
+
+    /* Carousel */
+    .hero-carousel{position:relative;height:400px;overflow:hidden;border-radius:16px;box-shadow: 0 4px 20px rgba(255,105,180,0.15)}
+    .carousel-item-custom{position:absolute;width:100%;height:100%;opacity:0;transition:opacity 1s ease-in-out}
+    .carousel-item-custom.active{opacity:1}
+    .carousel-item-custom img,.carousel-item-custom video{width:100%;height:100%;object-fit:cover}
 
     /* Product cards */
     .card{background:var(--card-bg);border:1px solid #ffc0cb;border-radius:14px;box-shadow: 0 2px 8px rgba(255,105,180,0.1);transition: transform 0.3s ease, box-shadow 0.3s ease}
@@ -82,118 +74,75 @@ Replace WhatsApp number: change `sellerNumber` variable in the script to your fu
     .fade-up{transform:translateY(6px);opacity:0;transition:all .5s ease-out}
     .fade-up.in{transform:none;opacity:1}
 
-    /* Video */
-    /* Hero Video Background Section */
-    .video-hero {
-      position: relative;
-      height: 100vh;
-      width: 100%;
-      overflow: hidden;
-    }
-
-    .video-hero video {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 1;
-    }
-
-    .video-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      
-      z-index: 2;
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 3;
-      text-align: center;
-      color: #000;
-      top: 85%;
-      transform: translateY(-50%);
-    }
-
-    .hero-content h1 {
-      font-size: 3.5rem;
-      font-weight: 700;
-    }
-
-    .hero-content p {
-      font-size: 1.25rem;
-    }
-
-    .btn-custom {
-     
-     border-radius: 50px;
-      color: #000;
-      font-weight: 500;
-    }
-
-    .btn-custom:hover {
-      
-      border-radius: 50px;
-      color: #000000;
-      font-weight: 700;
-    }
     /* Category sections */
-    .category-section{scroll-margin-top: 100px}
+    .category-section{scroll-margin-top: 150px}
 
     @media(min-width:768px){
       .card-img-top{height:260px}
       .hero .title{font-size:2.8rem}
-      .model-video{height:380px}
+      .hero-carousel{height:500px}
+      .logo-img{max-height:40px}
+      .category-section{scroll-margin-top: 130px}
     }
   </style>
 </head>
 <body>
- <!-- Video Background Section -->
-  <section class="video-hero">
-    <video autoplay muted playsinline>
-      <source src="assets/video/model1.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-    <div class="video-overlay"></div>
-    <div class="hero-content container">
-      <a href="#navmenu" class="btn btn-custom mt-3" data-aos="zoom-in" data-aos-delay="300">Explore Collection</a>
-    </div>
-  </section>
+ 
+  
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg sticky-top">
-  <div class="container py-2">
-    <a class="navbar-brand brand" href="#">IZAH</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
-      <span class="navbar-toggler-icon"><i class="fa fa-bars" style="color:#1a1a1a"></i></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navmenu">
-      <ul class="navbar-nav ms-auto align-items-center">
-        <li class="nav-item px-2"><a class="nav-link category-link" style="color:#1a1a1a;font-weight:500" href="#necklaces">Necklaces</a></li>
-        <li class="nav-item px-2"><a class="nav-link category-link" style="color:#1a1a1a;font-weight:500" href="#rings">Rings</a></li>
-        <li class="nav-item px-2"><a class="nav-link category-link" style="color:#1a1a1a;font-weight:500" href="#earrings">Earrings</a></li>
-        <li class="nav-item px-2"><a class="nav-link category-link" style="color:#1a1a1a;font-weight:500" href="#bracelets">Bracelets</a></li>
-        <li class="nav-item px-2"><a class="nav-link" style="color:#1a1a1a;font-weight:500" href="#about">About</a></li>
-        <li class="nav-item px-2 cart-badge">
-          <a class="nav-link" style="color:#1a1a1a" href="#cartModal" data-bs-toggle="modal"><i class="fa fa-shopping-bag"></i></a>
+<nav class="navbar fixed-top">
+  <div class="container-fluid px-4">
+    <div class="row w-100 align-items-center">
+      <!-- Cart on left -->
+      <div class="col-2 text-start">
+        <div class="cart-badge d-inline-block">
+          <a class="nav-link p-0" style="color:#1a1a1a;font-size:1.1rem" href="#cartModal" data-bs-toggle="modal">
+            <i class="fa fa-shopping-bag"></i>
+          </a>
           <span id="cart-count" class="cart-count" style="display:none">0</span>
-        </li>
-      </ul>
+        </div>
+      </div>
+
+      <!-- Logo centered -->
+      <div class="col-8">
+        <div class="logo-container">
+          <img src="assets/images/logo.jpg" alt="IZAH Logo" class="logo-img">
+          <!-- Replace 'assets/images/logo.png' with your actual logo path -->
+        </div>
+      </div>
+
+      <!-- Right side spacer -->
+      <div class="col-2"></div>
     </div>
   </div>
 </nav>
 
+<!-- TAB MENU -->
+<nav class="tab-menu fixed-top" style="top:48px">
+  <div class="container-fluid">
+    <ul class="nav nav-pills justify-content-center mb-0 flex-nowrap">
+      <li class="nav-item">
+        <a class="nav-link category-link" href="#necklaces" data-category="necklaces">Necklaces</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link category-link" href="#earrings" data-category="earrings">Earrings</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link category-link" href="#bracelets" data-category="bracelets">Bracelets</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link category-link" href="#rings" data-category="rings">Rings</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
 <!-- HERO -->
-<section class="hero">
+<section class="hero" style="padding-top:110px">
   <div class="container">
     <div class="row align-items-center">
-      <div class="col-md-6" data-aos="zoom-in">
-        <h1 class="title">Delicate. Trendy. Affordable.</h1>
+      <div class="col-md-6" data-aos="fade-right">
+        <h1 class="title hero-text" id="hero-title">Delicate.</h1>
         <p class="subtitle">IZAH — minimal fashion jewellery priced for students. Fresh drops every week.</p>
         <div class="mt-4">
           <a href="#necklaces" class="btn btn-accent btn-lg me-2">Shop New</a>
@@ -201,13 +150,24 @@ Replace WhatsApp number: change `sellerNumber` variable in the script to your fu
         </div>
       </div>
 
-      <div class="col-md-6" data-aos="zoom-in">
-        <!-- model video -->
-        <video class="model-video shadow" autoplay muted loop playsinline>
-          <source src="assets/video/h.mp4" type="video/mp4">
-          <!-- Replace above file with your model video. If not available, this shows nothing but layout remains. -->
-          Your browser does not support the video tag.
-        </video>
+      <div class="col-md-6 mt-4 mt-md-0" data-aos="fade-left">
+        <!-- Carousel -->
+        <div class="hero-carousel">
+          <div class="carousel-item-custom active">
+            <img src="assets/images/necklace.jpeg" alt="Jewellery Collection 1">
+          </div>
+          <div class="carousel-item-custom">
+            <img src="assets/images/brace.jpeg" alt="Jewellery Collection 2">
+          </div>
+          <div class="carousel-item-custom">
+            <img src="assets/images/necklace.jpeg" alt="Jewellery Collection 3">
+          </div>
+          <div class="carousel-item-custom">
+            <video autoplay muted loop playsinline>
+              <source src="assets/video/model1.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -225,14 +185,6 @@ Replace WhatsApp number: change `sellerNumber` variable in the script to your fu
       </div>
     </div>
 
-    <!-- RINGS -->
-    <div id="rings" class="category-section mb-5">
-      <h3 class="mb-3" style="color:#1a1a1a;border-bottom:2px solid #ff69b4;display:inline-block;padding-bottom:8px">Rings</h3>
-      <div class="product-grid row gy-4">
-        <!-- JS will inject ring products here -->
-      </div>
-    </div>
-
     <!-- EARRINGS -->
     <div id="earrings" class="category-section mb-5">
       <h3 class="mb-3" style="color:#1a1a1a;border-bottom:2px solid #ff69b4;display:inline-block;padding-bottom:8px">Earrings</h3>
@@ -246,6 +198,14 @@ Replace WhatsApp number: change `sellerNumber` variable in the script to your fu
       <h3 class="mb-3" style="color:#1a1a1a;border-bottom:2px solid #ff69b4;display:inline-block;padding-bottom:8px">Bracelets</h3>
       <div class="product-grid row gy-4">
         <!-- JS will inject bracelet products here -->
+      </div>
+    </div>
+
+    <!-- RINGS -->
+    <div id="rings" class="category-section mb-5">
+      <h3 class="mb-3" style="color:#1a1a1a;border-bottom:2px solid #ff69b4;display:inline-block;padding-bottom:8px">Rings</h3>
+      <div class="product-grid row gy-4">
+        <!-- JS will inject ring products here -->
       </div>
     </div>
 
@@ -291,7 +251,7 @@ Replace WhatsApp number: change `sellerNumber` variable in the script to your fu
       </div>
       <div class="col-md-3">
         <h6 style="color:#1a1a1a">Contact</h6>
-        <p class="text-muted mb-0"><i class="fa fa-phone"></i> WhatsApp: +91 98765 43210</p>
+        <p class="text-muted mb-0"><i class="fa fa-phone"></i> WhatsApp: +91 8606577577</p>
         <p class="text-muted"><i class="fa fa-envelope"></i> email@example.com</p>
       </div>
       <div class="col-md-3">
@@ -337,7 +297,7 @@ Replace WhatsApp number: change `sellerNumber` variable in the script to your fu
 
   // RENDER PRODUCTS
   function renderProducts(){
-    const categories = ['necklaces', 'rings', 'earrings', 'bracelets'];
+    const categories = ['necklaces', 'earrings', 'bracelets', 'rings'];
     
     categories.forEach(cat => {
       const section = document.querySelector(`#${cat} .product-grid`);
@@ -507,17 +467,47 @@ Replace WhatsApp number: change `sellerNumber` variable in the script to your fu
 
   // Smooth scroll for category links
   document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.category-link').forEach(link => {
+    const categoryLinks = document.querySelectorAll('.category-link');
+    
+    categoryLinks.forEach(link => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
+        
+        // Remove active class from all links
+        categoryLinks.forEach(l => l.classList.remove('active'));
+        
+        // Add active class to clicked link
+        link.classList.add('active');
+        
         const targetId = link.getAttribute('href').substring(1);
         const targetSection = document.getElementById(targetId);
         if(targetSection) {
-          const navbarHeight = 80;
-          const targetPosition = targetSection.offsetTop - navbarHeight;
+          const headerHeight = 130; // Header + tab menu height
+          const targetPosition = targetSection.offsetTop - headerHeight;
           window.scrollTo({
             top: targetPosition,
             behavior: 'smooth'
+          });
+        }
+      });
+    });
+    
+    // Update active tab on scroll
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('.category-section');
+      const scrollPos = window.scrollY + 150;
+      
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.offsetHeight;
+        const sectionId = section.getAttribute('id');
+        
+        if(scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+          categoryLinks.forEach(link => {
+            link.classList.remove('active');
+            if(link.getAttribute('href') === `#${sectionId}`) {
+              link.classList.add('active');
+            }
           });
         }
       });
@@ -545,10 +535,34 @@ Replace WhatsApp number: change `sellerNumber` variable in the script to your fu
 
     document.getElementById('clear-cart').addEventListener('click', () => { if(confirm('Clear cart?')) clearCart(); });
 
-    // animate fade-up elements
-    setTimeout(()=>{
-      document.querySelectorAll('.fade-up').forEach(e=>e.classList.add('in'));
-    },200);
+    
+
+    // Carousel auto-slide with synced hero text
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.carousel-item-custom');
+    const totalSlides = slides.length;
+    const heroTexts = ['Delicate.', 'Trendy.', 'Affordable.', 'Minimal.'];
+    const heroTitle = document.getElementById('hero-title');
+    
+    function nextSlide(){
+      // Fade out text
+      heroTitle.classList.add('fade-out');
+      
+      setTimeout(() => {
+        // Change slide
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (currentSlide + 1) % totalSlides;
+        slides[currentSlide].classList.add('active');
+        
+        // Update text
+        heroTitle.textContent = heroTexts[currentSlide];
+        
+        // Fade in text
+        heroTitle.classList.remove('fade-out');
+      }, 300);
+    }
+    
+    setInterval(nextSlide, 3000); // Change slide every 3 seconds
   });
 
 </script>
