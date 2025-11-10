@@ -323,19 +323,43 @@
   const sellerNumber = '918606577577';
 
   const products = [
-    {id:1, name: 'Rose Petal Hoops', price: 249, image: 'assets/images/necklace.jpeg', inStock:true, qtyAvailable: 15, category: 'earrings'},
-    {id:2, name: 'Minimal Chain Choker', price: 299, image: 'assets/images/brace.jpeg', inStock:true, qtyAvailable: 8, category: 'necklaces'},
-    {id:3, name: 'Tiny Heart Studs', price: 199, image: 'assets/images/brace.jpeg', inStock:false, qtyAvailable: 0, category: 'earrings'},
-    {id:4, name: 'Stackable Rings Set', price: 279, image: 'assets/images/necklace.jpeg', inStock:true, qtyAvailable: 12, category: 'rings'},
-    {id:5, name: 'Pearl Drop Earrings', price: 349, image: 'assets/images/brace.jpeg', inStock:true, qtyAvailable: 6, category: 'earrings'},
-    {id:6, name: 'Layered Chain Necklace', price: 399, image: 'assets/images/necklace.jpeg', inStock:true, qtyAvailable: 10, category: 'necklaces'},
-    {id:7, name: 'Crystal Studs', price: 229, image: 'assets/images/necklace.jpeg', inStock:true, qtyAvailable: 20, category: 'earrings'},
-    {id:8, name: 'Gold Band Ring', price: 189, image: 'assets/images/brace.jpeg', inStock:true, qtyAvailable: 18, category: 'rings'},
-    {id:9, name: 'Charm Bracelet', price: 329, image: 'assets/images/necklace.jpeg', inStock:true, qtyAvailable: 7, category: 'bracelets'},
-    {id:10, name: 'Beaded Bracelet', price: 269, image: 'assets/images/brace.jpeg', inStock:true, qtyAvailable: 14, category: 'bracelets'},
-    {id:11, name: 'Silver Hoop Earrings', price: 299, image: 'assets/images/brace.jpeg', inStock:true, qtyAvailable: 9, category: 'earrings'},
-    {id:12, name: 'Statement Ring', price: 349, image: 'assets/images/necklace.jpeg', inStock:true, qtyAvailable: 5, category: 'rings'}
-  ];
+  // Bracelets
+  {id: 1, name: 'Gold Heart Double Layer Bracelet', price: 299, image: 'assets/images/Goldheartdoublelayerbracelet.JPG', inStock: true, qtyAvailable: 10, category: 'bracelets'},
+  {id: 2, name: 'Halo Heart Double Layer Bracelet', price: 319, image: 'assets/images/Haloheartdoublelayerbracelet.JPG', inStock: true, qtyAvailable: 8, category: 'bracelets'},
+  {id: 3, name: 'Butterfly Gold Bracelet', price: 329, image: 'assets/images/Butterflygoldbracelet.JPG', inStock: true, qtyAvailable: 7, category: 'bracelets'},
+  {id: 4, name: 'Elegant Star Bracelet', price: 289, image: 'assets/images/Elegantstarbracelet.JPG', inStock: true, qtyAvailable: 12, category: 'bracelets'},
+  {id: 5, name: 'Star Double Layered Gold Bracelet', price: 309, image: 'assets/images/Stardoublelayeredgolfbracelet.JPG', inStock: true, qtyAvailable: 9, category: 'bracelets'},
+  {id: 6, name: 'Gold Double Layer Bracelet', price: 299, image: 'assets/images/Golddoublelayerbracelet.JPG', inStock: true, qtyAvailable: 11, category: 'bracelets'},
+
+  // Necklaces
+  {id: 7, name: 'Gold Heart Necklace', price: 349, image: 'assets/images/Goldheartnecklace1.JPG', inStock: true, qtyAvailable: 10, category: 'necklaces'},
+  {id: 8, name: 'Twin Butterfly Golden Chain Necklace', price: 369, image: 'assets/images/Twinbutterflygoldenchainnecklace.JPG', inStock: true, qtyAvailable: 8, category: 'necklaces'},
+  {id: 9, name: 'Butterfly Y Chain Necklace', price: 359, image: 'assets/images/Butterflyychainnecklace.JPG', inStock: true, qtyAvailable: 10, category: 'necklaces'},
+  {id: 10, name: 'Butterfly Drop Necklace', price: 379, image: 'assets/images/Butterflydropnecklace.JPG', inStock: true, qtyAvailable: 6, category: 'necklaces'},
+  {id: 11, name: 'Rose Gold Layered Necklace', price: 399, image: 'assets/images/Rosegoldlayerednecklace.JPG', inStock: true, qtyAvailable: 9, category: 'necklaces'},
+  {id: 12, name: 'Bow Snake Necklace', price: 349, image: 'assets/images/Bowsnakenecklace.JPG', inStock: true, qtyAvailable: 10, category: 'necklaces'},
+  {id: 13, name: 'Double Layered Snake Chain Necklace', price: 389, image: 'assets/images/Doublelayeredsnakechainnecklace.JPG', inStock: true, qtyAvailable: 7, category: 'necklaces'},
+  {id: 14, name: 'Elegant Bow Necklace', price: 339, image: 'assets/images/Elegantbownecklace.JPG', inStock: true, qtyAvailable: 8, category: 'necklaces'},
+  {id: 15, name: 'Clover Double Chain Necklace', price: 359, image: 'assets/images/Cloverdoublechainnecklace.JPG', inStock: true, qtyAvailable: 9, category: 'necklaces'},
+  {id: 16, name: 'Minimal Butterfly Necklace', price: 299, image: 'assets/images/Minimalbutterflynecklace.JPG', inStock: true, qtyAvailable: 10, category: 'necklaces'},
+  {id: 17, name: 'Minimal Heart Necklace', price: 319, image: 'assets/images/Minimalheartnecklace.JPG', inStock: true, qtyAvailable: 10, category: 'necklaces'},
+  {id: 18, name: 'Rose Gold Layered Necklace', price: 369, image: 'assets/images/Rosegoldlayerednecklace.JPG', inStock: true, qtyAvailable: 9, category: 'necklaces'},
+  
+
+  // Earrings
+  {id: 19, name: 'Rose Gold Sphere Earrings', price: 269, image: 'assets/images/Rosegoldsphereearrings.JPG', inStock: true, qtyAvailable: 14, category: 'earrings'},
+  {id: 20, name: 'Golden Prism Earrings', price: 289, image: 'assets/images/Goldenprismearrings.JPG', inStock: true, qtyAvailable: 10, category: 'earrings'},
+  {id: 21, name: 'Flower Cluster Earrings', price: 279, image: 'assets/images/Flowerclusterearrings.JPG', inStock: true, qtyAvailable: 9, category: 'earrings'},
+  {id: 22, name: 'Gold Huggie Hoop Earrings', price: 299, image: 'assets/images/Goldhuggiehoopearrings.JPG', inStock: true, qtyAvailable: 8, category: 'earrings'},
+  {id: 23, name: 'Swirl Earrings', price: 259, image: 'assets/images/Swirlearrings.JPG', inStock: true, qtyAvailable: 15, category: 'earrings'},
+  {id: 24, name: 'Rose Gold Huggie Hoop Earrings', price: 309, image: 'assets/images/Rosegoldhuggiehoopearrings.JPG', inStock: true, qtyAvailable: 7, category: 'earrings'},
+  {id: 25, name: 'Vema Rose Gold Earrings', price: 289, image: 'assets/images/Vemarosegoldearring.JPG', inStock: true, qtyAvailable: 10, category: 'earrings'},
+  {id: 26, name: 'Pearl Elegant Rose Gold Earrings', price: 319, image: 'assets/images/Pearlelegantrosegoldearrings.JPG', inStock: true, qtyAvailable: 12, category: 'earrings'},
+  {id: 27, name: 'Halo Stud Earrings', price: 289, image: 'assets/images/Halostudearrings.JPG', inStock: true, qtyAvailable: 9, category: 'earrings'},
+  {id: 28, name: 'Vema Silver Earrings', price: 279, image: 'assets/images/Vemasilverearrings.JPG', inStock: true, qtyAvailable: 11, category: 'earrings'}
+];
+
+
 
   let cart = [];
   const fmtINR = n => '₹' + n.toString();
