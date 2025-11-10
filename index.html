@@ -37,13 +37,18 @@
       border-bottom:1px solid #ffc0cb;
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
       z-index:1020;
-      padding-top: 0.25rem;
+      padding: 0.5rem 0;
       overflow-x: auto;
       overflow-y: hidden;
       -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent-light) transparent;
     }
     .tab-menu::-webkit-scrollbar {
-      height: 2px;
+      height: 3px;
+    }
+    .tab-menu::-webkit-scrollbar-track {
+      background: transparent;
     }
     .tab-menu::-webkit-scrollbar-thumb {
       background: var(--accent-light);
@@ -52,28 +57,31 @@
     .tab-menu .nav{
       margin:0;
       flex-wrap: nowrap;
-      width: max-content;
-      min-width: 100%;
+      display: flex;
+      padding: 0 0.5rem;
     }
     .tab-menu .nav-link{
       color:#1a1a1a;
       font-weight:500;
-      padding:0.5rem 1rem;
-      transition:all 0.1s ease;
+      padding:0.6rem 1.2rem;
+      transition:all 0.2s ease;
       border-bottom:3px solid transparent;
-      margin:0 0.1rem;
+      margin:0 0.25rem;
       white-space: nowrap;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
+      border-radius: 8px 8px 0 0;
     }
     .tab-menu .nav-link:hover{
       color:var(--accent);
       border-bottom-color:var(--accent-light);
-      background:rgba(255,105,180,0.05)
+      background:rgba(255,105,180,0.05);
+      transform: translateY(-2px);
     }
     .tab-menu .nav-link.active{
       color:var(--accent);
-      border-bottom-color:var(--accent-light);
-      background:rgba(255,105,180,0.05)
+      border-bottom-color:var(--accent);
+      background:rgba(255,105,180,0.08);
+      font-weight: 600;
     }
 
     /* Hero */
@@ -111,6 +119,15 @@
     /* Category sections */
     .category-section{scroll-margin-top: 150px}
 
+    /* Small phones */
+    @media(max-width:360px){
+      .tab-menu .nav-link{
+        padding:0.6rem 0.8rem;
+        font-size: 0.8rem;
+        margin:0 0.15rem;
+      }
+    }
+
     /* Tablet and up */
     @media(min-width:768px){
       .card-img-top{height:260px}
@@ -118,9 +135,24 @@
       .hero-carousel{height:500px}
       .logo-img{max-height:40px}
       .category-section{scroll-margin-top: 130px}
+      .tab-menu{
+        padding: 0.25rem 0;
+      }
+      .tab-menu .nav{
+        justify-content: center;
+        padding: 0 1rem;
+      }
       .tab-menu .nav-link{
-        padding:0.5rem 2rem;
-        margin:0 0.25rem;
+        padding:0.7rem 2rem;
+        margin:0 0.5rem;
+        font-size: 0.95rem;
+      }
+    }
+
+    /* Desktop */
+    @media(min-width:1024px){
+      .tab-menu .nav-link{
+        padding:0.7rem 2.5rem;
         font-size: 1rem;
       }
     }
@@ -154,8 +186,8 @@
 
 <!-- TAB MENU -->
 <nav class="tab-menu fixed-top" style="top:48px">
-  <div class="container-fluid px-2">
-    <ul class="nav nav-pills justify-content-start mb-0">
+  <div class="container-fluid px-0">
+    <ul class="nav nav-pills mb-0">
       <li class="nav-item">
         <a class="nav-link category-link" href="#necklaces" data-category="necklaces">Necklaces</a>
       </li>
