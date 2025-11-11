@@ -96,10 +96,11 @@
     .carousel-item-custom img,.carousel-item-custom video{width:100%;height:100%;object-fit:cover}
 
     /* Product cards */
-    .card{background:var(--card-bg);border:1px solid #ffc0cb;border-radius:14px;box-shadow: 0 2px 8px rgba(255,105,180,0.1);transition: transform 0.3s ease, box-shadow 0.3s ease}
+    .card{background:var(--card-bg);border:1px solid #ffc0cb;border-radius:14px;box-shadow: 0 2px 8px rgba(255,105,180,0.1);transition: transform 0.3s ease, box-shadow 0.3s ease;height:100%;display:flex;flex-direction:column}
     .card:hover{transform:translateY(-5px);box-shadow: 0 4px 16px rgba(255,105,180,0.2)}
-    .card-img-top{height:220px;object-fit:cover;border-top-left-radius:14px;border-top-right-radius:14px}
-    .card .name{font-size:.98rem;font-weight:600;color:var(--primary)}
+    .card-img-top{height:220px;object-fit:cover;border-top-left-radius:14px;border-top-right-radius:14px;flex-shrink:0}
+    .card-body{flex:1;display:flex;flex-direction:column;justify-content:center}
+    .card .name{font-size:.98rem;font-weight:600;color:var(--primary);min-height:2.4em;display:flex;align-items:center;justify-content:center}
     .price{color:var(--accent);font-weight:700}
 
     .btn-accent{background:linear-gradient(90deg,var(--accent),var(--accent-dark));border:0;color:#fff;transition: all 0.3s ease}
@@ -118,6 +119,18 @@
 
     /* Category sections */
     .category-section{scroll-margin-top: 150px}
+
+    /* Product Detail Modal */
+    .product-modal .modal-dialog{max-width:900px}
+    .product-detail-carousel{position:relative;height:450px;overflow:hidden;border-radius:12px;background:#f8f9fa}
+    .carousel-image{width:100%;height:100%;object-fit:contain;transition:opacity 0.4s ease}
+    .carousel-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.9);border:none;width:45px;height:45px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;transition:all 0.2s ease}
+    .carousel-nav:hover{background:rgba(255,255,255,1);transform:translateY(-50%) scale(1.1)}
+    .carousel-nav.prev{left:15px}
+    .carousel-nav.next{right:15px}
+    .carousel-indicators{position:absolute;bottom:15px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:10}
+    .carousel-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.5);border:none;cursor:pointer;transition:all 0.3s ease}
+    .carousel-dot.active{background:var(--accent);width:30px;border-radius:5px}
 
     /* Small phones */
     @media(max-width:360px){
@@ -155,6 +168,11 @@
         padding:0.7rem 2.5rem;
         font-size: 1rem;
       }
+    }
+    
+    @media(max-width:767px){
+      .product-detail-carousel{height:320px}
+      .carousel-nav{width:38px;height:38px}
     }
   </style>
 </head>
@@ -293,6 +311,43 @@
   </div>
 </div>
 
+<!-- PRODUCT DETAIL MODAL -->
+<div class="modal fade product-modal" id="productModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background:#fff;color:#1a1a1a;border:2px solid #ffc0cb">
+      <div class="modal-header" style="border-bottom:1px solid #ffc0cb">
+        <h5 class="modal-title" id="productModalTitle"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-7">
+            <div class="product-detail-carousel">
+              <img id="carousel-main-image" class="carousel-image" src="" alt="">
+              <button class="carousel-nav prev" onclick="changeImage(-1)">
+                <i class="fa fa-chevron-left"></i>
+              </button>
+              <button class="carousel-nav next" onclick="changeImage(1)">
+                <i class="fa fa-chevron-right"></i>
+              </button>
+              <div class="carousel-indicators" id="carousel-indicators"></div>
+            </div>
+          </div>
+          <div class="col-md-5 mt-3 mt-md-0">
+            <h4 id="detail-name" class="mb-3"></h4>
+            <div class="mb-3">
+              <span class="price fs-4" id="detail-price"></span>
+            </div>
+            <p id="detail-description" class="text-muted mb-3"></p>
+            <div id="detail-stock" class="mb-3"></div>
+            <div id="detail-actions"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- FOOTER -->
 <footer class="mt-5">
   <div class="container">
@@ -324,42 +379,40 @@
 
   const products = [
   // Bracelets
-  {id: 1, name: 'Gold Heart Double Layer Bracelet', price: 299, image: 'assets/images/Goldheartdoublelayerbracelet.JPG', inStock: true, qtyAvailable: 10, category: 'bracelets'},
-  {id: 2, name: 'Halo Heart Double Layer Bracelet', price: 319, image: 'assets/images/Haloheartdoublelayerbracelet.JPG', inStock: true, qtyAvailable: 8, category: 'bracelets'},
-  {id: 3, name: 'Butterfly Gold Bracelet', price: 329, image: 'assets/images/Butterflygoldbracelet.JPG', inStock: true, qtyAvailable: 7, category: 'bracelets'},
-  {id: 4, name: 'Elegant Star Bracelet', price: 289, image: 'assets/images/Elegantstarbracelet.JPG', inStock: true, qtyAvailable: 12, category: 'bracelets'},
-  {id: 5, name: 'Star Double Layered Gold Bracelet', price: 309, image: 'assets/images/Stardoublelayeredgolfbracelet.JPG', inStock: true, qtyAvailable: 9, category: 'bracelets'},
-  {id: 6, name: 'Gold Double Layer Bracelet', price: 299, image: 'assets/images/Golddoublelayerbracelet.JPG', inStock: true, qtyAvailable: 11, category: 'bracelets'},
+  {id: 1, name: 'Gold Heart Double Layer Bracelet', price: 299, images: ['assets/images/Goldheartdoublelayerbracelet.JPG'], inStock: true, qtyAvailable: 10, category: 'bracelets', description: 'Elegant double-layered bracelet with a delicate gold heart charm. Perfect for everyday wear.'},
+  {id: 2, name: 'Halo Heart Double Layer Bracelet', price: 319, images: ['assets/images/Haloheartdoublelayerbracelet.JPG'], inStock: true, qtyAvailable: 8, category: 'bracelets', description: 'Stunning halo heart design with double chain layers. A must-have accessory.'},
+  {id: 3, name: 'Butterfly Gold Bracelet', price: 329, images: ['assets/images/Butterflygoldbracelet.JPG'], inStock: true, qtyAvailable: 7, category: 'bracelets', description: 'Beautiful butterfly charm bracelet in gold finish. Adds a touch of elegance to any outfit.'},
+  {id: 4, name: 'Elegant Star Bracelet', price: 289, images: ['assets/images/Elegantstarbracelet.JPG'], inStock: true, qtyAvailable: 12, category: 'bracelets', description: 'Minimalist star charm bracelet. Perfect for those who love subtle elegance.'},
+  {id: 5, name: 'Star Double Layered Gold Bracelet', price: 309, images: ['assets/images/Stardoublelayeredgolfbracelet.JPG'], inStock: true, qtyAvailable: 9, category: 'bracelets', description: 'Double-layered design with star charm. Versatile and stylish.'},
+  {id: 6, name: 'Gold Double Layer Bracelet', price: 299, images: ['assets/images/Golddoublelayerbracelet.JPG'], inStock: true, qtyAvailable: 11, category: 'bracelets', description: 'Classic double-layer gold bracelet. Simple yet sophisticated.'},
 
   // Necklaces
-  {id: 7, name: 'Gold Heart Necklace', price: 349, image: 'assets/images/Goldheartnecklace1.JPG', inStock: true, qtyAvailable: 10, category: 'necklaces'},
-  {id: 8, name: 'Twin Butterfly Golden Chain Necklace', price: 369, image: 'assets/images/Twinbutterflygoldenchainnecklace.JPG', inStock: true, qtyAvailable: 8, category: 'necklaces'},
-  {id: 9, name: 'Butterfly Y Chain Necklace', price: 359, image: 'assets/images/Butterflyychainnecklace.JPG', inStock: true, qtyAvailable: 10, category: 'necklaces'},
-  {id: 10, name: 'Butterfly Drop Necklace', price: 379, image: 'assets/images/Butterflydropnecklace.png', inStock: true, qtyAvailable: 6, category: 'necklaces'},
-  {id: 11, name: 'Rose Gold Layered Necklace', price: 399, image: 'assets/images/Rosegoldlayerednecklace.JPG', inStock: true, qtyAvailable: 9, category: 'necklaces'},
-  {id: 12, name: 'Bow Snake Necklace', price: 349, image: 'assets/images/Bowsnakenecklace.JPG', inStock: true, qtyAvailable: 10, category: 'necklaces'},
-  {id: 13, name: 'Double Layered Snake Chain Necklace', price: 389, image: 'assets/images/Doublelayeredsnakechainnecklace.JPG', inStock: true, qtyAvailable: 7, category: 'necklaces'},
-  {id: 14, name: 'Elegant Bow Necklace', price: 339, image: 'assets/images/ElegantBownecklace.png', inStock: true, qtyAvailable: 8, category: 'necklaces'},
-  {id: 15, name: 'Clover Double Chain Necklace', price: 359, image: 'assets/images/Cloverdoublechainnecklace.JPG', inStock: true, qtyAvailable: 9, category: 'necklaces'},
-  {id: 16, name: 'Minimal Butterfly Necklace', price: 299, image: 'assets/images/Minimalbutterflynecklace.JPG', inStock: true, qtyAvailable: 10, category: 'necklaces'},
-  {id: 17, name: 'Minimal Heart Necklace', price: 319, image: 'assets/images/Minimalheartnecklace.JPG', inStock: true, qtyAvailable: 10, category: 'necklaces'},
-  {id: 18, name: 'Rose Gold Layered Necklace', price: 369, image: 'assets/images/Rosegoldlayerednecklace.JPG', inStock: true, qtyAvailable: 9, category: 'necklaces'},
+  {id: 7, name: 'Gold Heart Necklace', price: 349, images: ['assets/images/Goldheartnecklace1.JPG','assets/images/Goldheartnecklace.JPG','assets/images/Goldheartnecklace2.png'], inStock: true, qtyAvailable: 10, category: 'necklaces', description: 'Delicate gold heart pendant necklace. A timeless piece for any jewelry collection.'},
+  {id: 8, name: 'Twin Butterfly Golden Chain Necklace', price: 369, images: ['assets/images/Twinbutterflygoldenchainnecklace.JPG','assets/images/Twinbutterflygoldenchainnecklace1.png'], inStock: true, qtyAvailable: 8, category: 'necklaces', description: 'Twin butterfly charms on a golden chain. Feminine and graceful.'},
+  {id: 9, name: 'Butterfly Y Chain Necklace', price: 359, images: ['assets/images/Butterflyychainnecklace.JPG'], inStock: true, qtyAvailable: 10, category: 'necklaces', description: 'Trendy Y-chain design with butterfly pendant. Makes a statement.'},
+  {id: 10, name: 'Butterfly Drop Necklace', price: 379, images: ['assets/images/Butterflydropnecklace.png'], inStock: true, qtyAvailable: 6, category: 'necklaces', description: 'Elegant butterfly drop pendant. Perfect for special occasions.'},
+  {id: 11, name: 'Rose Gold Layered Necklace', price: 399, images: ['assets/images/Rosegoldlayerednecklace.JPG','assets/images/Rosegoldlayerednecklace1.png'], inStock: true, qtyAvailable: 9, category: 'necklaces', description: 'Luxurious rose gold layered necklace. Adds sophistication to any look.'},
+  {id: 12, name: 'Bow Snake Necklace', price: 349, images: ['assets/images/Bowsnakenecklace.JPG','assets/images/Bowsnakenecklace1.png'], inStock: true, qtyAvailable: 10, category: 'necklaces', description: 'Unique bow design with snake chain. Modern and chic.'},
+  {id: 13, name: 'Double Layered Snake Chain Necklace', price: 389, images: ['assets/images/Doublelayeredsnakechainnecklace.JPG','assets/images/Doublelayeredsnakechainnecklace1.png'], inStock: true, qtyAvailable: 7, category: 'necklaces', description: 'Sleek double-layered snake chain. Minimalist elegance.'},
+  {id: 14, name: 'Elegant Bow Necklace', price: 339, images: ['assets/images/ElegantBownecklace.png'], inStock: true, qtyAvailable: 8, category: 'necklaces', description: 'Charming bow pendant necklace. Sweet and elegant.'},
+  {id: 15, name: 'Clover Double Chain Necklace', price: 359, images: ['assets/images/Cloverdoublechainnecklace.JPG','assets/images/Cloverdoublechainnecklace1.png'], inStock: true, qtyAvailable: 9, category: 'necklaces', description: 'Lucky clover charm with double chain. Stylish and meaningful.'},
+  {id: 16, name: 'Minimal Butterfly Necklace', price: 299, images: ['assets/images/Minimalbutterflynecklace.JPG','assets/images/Minimalbutterflynecklace1.png'], inStock: true, qtyAvailable: 10, category: 'necklaces', description: 'Minimalist butterfly pendant. Simple and beautiful.'},
+  {id: 17, name: 'Minimal Heart Necklace', price: 319, images: ['assets/images/Minimalheartnecklace.JPG','assets/images/Minimalheartnecklace1.png'], inStock: true, qtyAvailable: 10, category: 'necklaces', description: 'Delicate heart pendant. Classic and versatile.'},
+  {id: 18, name: 'Rose Gold Layered Necklace', price: 369, images: ['assets/images/Rosegoldlayerednecklace.JPG','assets/images/Rosegoldlayerednecklace1.png'], inStock: true, qtyAvailable: 9, category: 'necklaces', description: 'Beautiful rose gold layered design. Elegant and trendy.'},
   
 
   // Earrings
-  {id: 19, name: 'Rose Gold Sphere Earrings', price: 269, image: 'assets/images/Rosegoldsphereearrings.JPG', inStock: true, qtyAvailable: 14, category: 'earrings'},
-  {id: 20, name: 'Golden Prism Earrings', price: 289, image: 'assets/images/Goldenprismearrings.JPG', inStock: true, qtyAvailable: 10, category: 'earrings'},
-  {id: 21, name: 'Flower Cluster Earrings', price: 279, image: 'assets/images/Flowerclusterearrings.JPG', inStock: true, qtyAvailable: 9, category: 'earrings'},
-  {id: 22, name: 'Gold Huggie Hoop Earrings', price: 299, image: 'assets/images/Goldhuggiehoopearrings.JPG', inStock: true, qtyAvailable: 8, category: 'earrings'},
-  {id: 23, name: 'Swirl Earrings', price: 259, image: 'assets/images/Swirlearrings.JPG', inStock: true, qtyAvailable: 15, category: 'earrings'},
-  {id: 24, name: 'Rose Gold Huggie Hoop Earrings', price: 309, image: 'assets/images/Rosegoldhuggiehoopearrings.JPG', inStock: true, qtyAvailable: 7, category: 'earrings'},
-  {id: 25, name: 'Vema Rose Gold Earrings', price: 289, image: 'assets/images/Vemarosegoldearring.JPG', inStock: true, qtyAvailable: 10, category: 'earrings'},
-  {id: 26, name: 'Pearl Elegant Rose Gold Earrings', price: 319, image: 'assets/images/Pearlelegantrosegoldearrings.JPG', inStock: true, qtyAvailable: 12, category: 'earrings'},
-  {id: 27, name: 'Halo Stud Earrings', price: 289, image: 'assets/images/Halostudearrings.JPG', inStock: true, qtyAvailable: 9, category: 'earrings'},
-  {id: 28, name: 'Vema Silver Earrings', price: 279, image: 'assets/images/Vemasilverearrings.JPG', inStock: true, qtyAvailable: 11, category: 'earrings'}
+  {id: 19, name: 'Rose Gold Sphere Earrings', price: 269, images: ['assets/images/Rosegoldsphereearrings.JPG','assets/images/Rosegoldsphereearrings1.JPG'], inStock: true, qtyAvailable: 14, category: 'earrings', description: 'Elegant rose gold sphere studs. Perfect for everyday wear.'},
+  {id: 20, name: 'Golden Prism Earrings', price: 289, images: ['assets/images/Goldenprismearrings.JPG'], inStock: true, qtyAvailable: 10, category: 'earrings', description: 'Geometric prism design in gold. Modern and eye-catching.'},
+  {id: 21, name: 'Flower Cluster Earrings', price: 279, images: ['assets/images/Flowerclusterearrings.JPG'], inStock: true, qtyAvailable: 9, category: 'earrings', description: 'Delicate flower cluster studs. Feminine and charming.'},
+  {id: 22, name: 'Gold Huggie Hoop Earrings', price: 299, images: ['assets/images/Goldhuggiehoopearrings.JPG','assets/images/Goldhuggiehoopearrings1.JPG'], inStock: true, qtyAvailable: 8, category: 'earrings', description: 'Classic gold huggie hoops. Versatile and stylish.'},
+  {id: 23, name: 'Swirl Earrings', price: 259, images: ['assets/images/Swirlearrings.JPG','assets/images/Swirlearrings1.png'], inStock: true, qtyAvailable: 15, category: 'earrings', description: 'Unique swirl design. Modern and elegant.'},
+  {id: 24, name: 'Rose Gold Huggie Hoop Earrings', price: 309, images: ['assets/images/Rosegoldhuggiehoopearrings.JPG','assets/images/Rosegoldhuggiehoopearrings1.JPG'], inStock: true, qtyAvailable: 7, category: 'earrings', description: 'Rose gold huggie hoops. Chic and sophisticated.'},
+  {id: 25, name: 'Vema Rose Gold Earrings', price: 289, images: ['assets/images/Vemarosegoldearring.JPG'], inStock: true, qtyAvailable: 10, category: 'earrings', description: 'Elegant Vema design in rose gold. Perfect for any occasion.'},
+  {id: 26, name: 'Pearl Elegant Rose Gold Earrings', price: 319, images: ['assets/images/Pearlelegantrosegoldearrings.JPG','assets/images/Pearlelegantrosegoldearrings1.JPG'], inStock: true, qtyAvailable: 12, category: 'earrings', description: 'Beautiful pearl studs in rose gold. Classic elegance.'},
+  {id: 27, name: 'Halo Stud Earrings', price: 289, images: ['assets/images/Halostudearrings.JPG'], inStock: true, qtyAvailable: 9, category: 'earrings', description: 'Stunning halo design studs. Sparkle and shine.'},
+  {id: 28, name: 'Vema Silver Earrings', price: 279, images: ['assets/images/Vemasilverearrings.JPG'], inStock: true, qtyAvailable: 11, category: 'earrings', description: 'Elegant Vema design in silver. Versatile and beautiful.'}
 ];
-
-
 
   let cart = [];
   const fmtINR = n => '₹' + n.toString();
@@ -381,45 +434,123 @@
         const card = document.createElement('div');
         card.className = 'col-6 col-md-3';
         card.innerHTML = `
-          <div class="card shadow-sm" data-aos="zoom-in">
+          <div class="card shadow-sm" data-aos="zoom-in" style="cursor:pointer" onclick="openProductDetail(${p.id})">
             <div style="position:relative">
-              <img src="${p.image}" class="card-img-top ${soldClass}" alt="${p.name}">
+              <img src="${p.images[0]}" class="card-img-top ${soldClass}" alt="${p.name}">
               ${soldBadge}
             </div>
             <div class="card-body text-center">
               <div class="name mb-2">${p.name}</div>
               <div class="price mb-2">${fmtINR(p.price)}</div>
               ${stockInfo}
-              <div class="mt-3">
-                ${p.inStock ? `
-                  <div class="d-flex align-items-center justify-content-center gap-2 mb-2">
-                    <button class="btn btn-sm btn-outline-dark qty-btn" data-id="${p.id}" data-action="decrease">-</button>
-                    <input type="number" class="form-control form-control-sm text-center qty-input" id="qty-${p.id}" value="1" min="1" max="${p.qtyAvailable}" style="width:60px" readonly>
-                    <button class="btn btn-sm btn-outline-dark qty-btn" data-id="${p.id}" data-action="increase">+</button>
-                  </div>
-                  <button class="btn btn-accent btn-sm add-to-cart" data-id="${p.id}">Add to Cart</button>
-                ` : `<button class="btn btn-secondary btn-sm" disabled>Sold Out</button>`}
-              </div>
             </div>
           </div>
         `;
         section.appendChild(card);
       });
     });
+  }
+
+  let currentProduct = null;
+  let currentImageIndex = 0;
+
+  function openProductDetail(productId){
+    const product = products.find(p => p.id === productId);
+    if(!product) return;
     
-    attachAddListeners();
-    attachQtyListeners();
+    currentProduct = product;
+    currentImageIndex = 0;
+    
+    document.getElementById('productModalTitle').innerText = product.name;
+    document.getElementById('detail-name').innerText = product.name;
+    document.getElementById('detail-price').innerText = fmtINR(product.price);
+    document.getElementById('detail-description').innerText = product.description;
+    
+    const stockDiv = document.getElementById('detail-stock');
+    if(product.inStock){
+      stockDiv.innerHTML = `<small class="text-success"><i class="fa fa-check-circle"></i> In Stock (${product.qtyAvailable} available)</small>`;
+    } else {
+      stockDiv.innerHTML = `<small class="text-danger"><i class="fa fa-times-circle"></i> Sold Out</small>`;
+    }
+    
+    const actionsDiv = document.getElementById('detail-actions');
+    if(product.inStock){
+      actionsDiv.innerHTML = `
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <button class="btn btn-sm btn-outline-dark qty-btn-modal" onclick="adjustModalQty(-1)">-</button>
+          <input type="number" class="form-control form-control-sm text-center" id="modal-qty" value="1" min="1" max="${product.qtyAvailable}" style="width:70px" readonly>
+          <button class="btn btn-sm btn-outline-dark qty-btn-modal" onclick="adjustModalQty(1)">+</button>
+        </div>
+        <button class="btn btn-accent w-100" onclick="addToCartFromModal()">
+          <i class="fa fa-shopping-bag"></i> Add to Cart
+        </button>
+      `;
+    } else {
+      actionsDiv.innerHTML = `<button class="btn btn-secondary w-100" disabled>Sold Out</button>`;
+    }
+    
+    updateCarouselImages();
+    
+    const productModal = new bootstrap.Modal(document.getElementById('productModal'));
+    productModal.show();
+  }
+
+  function updateCarouselImages(){
+    if(!currentProduct) return;
+    
+    const mainImage = document.getElementById('carousel-main-image');
+    mainImage.src = currentProduct.images[currentImageIndex];
+    
+    const indicators = document.getElementById('carousel-indicators');
+    indicators.innerHTML = '';
+    
+    currentProduct.images.forEach((img, idx) => {
+      const dot = document.createElement('button');
+      dot.className = `carousel-dot ${idx === currentImageIndex ? 'active' : ''}`;
+      dot.onclick = () => {
+        currentImageIndex = idx;
+        updateCarouselImages();
+      };
+      indicators.appendChild(dot);
+    });
+  }
+
+  function changeImage(direction){
+    if(!currentProduct) return;
+    currentImageIndex += direction;
+    if(currentImageIndex < 0) currentImageIndex = currentProduct.images.length - 1;
+    if(currentImageIndex >= currentProduct.images.length) currentImageIndex = 0;
+    updateCarouselImages();
+  }
+
+  function adjustModalQty(change){
+    if(!currentProduct) return;
+    const qtyInput = document.getElementById('modal-qty');
+    let qty = parseInt(qtyInput.value) + change;
+    if(qty < 1) qty = 1;
+    if(qty > currentProduct.qtyAvailable) qty = currentProduct.qtyAvailable;
+    qtyInput.value = qty;
+  }
+
+  function addToCartFromModal(){
+    if(!currentProduct) return;
+    const qty = parseInt(document.getElementById('modal-qty').value);
+    const currentCart = getCart();
+    currentCart.push({id:currentProduct.id, name:currentProduct.name, price:currentProduct.price, qty: qty});
+    saveCart(currentCart);
+    showToast(`${qty}x ${currentProduct.name} added to cart`);
+    renderCartItems();
+    
+    const productModal = bootstrap.Modal.getInstance(document.getElementById('productModal'));
+    productModal.hide();
   }
 
   function getCart(){ return cart; }
   function saveCart(c){ cart = c; updateCartCount(); }
 
-  function addToCart(productId){
+  function addToCart(productId, qty = 1){
     const product = products.find(x=>x.id===productId);
     if(!product || !product.inStock) return;
-    
-    const qtyInput = document.getElementById(`qty-${productId}`);
-    const qty = parseInt(qtyInput.value);
     
     if(qty > product.qtyAvailable) {
       showToast(`Only ${product.qtyAvailable} available!`);
@@ -430,7 +561,6 @@
     currentCart.push({id:product.id, name:product.name, price:product.price, qty: qty});
     saveCart(currentCart);
     showToast(`${qty}x ${product.name} added to cart`);
-    qtyInput.value = 1;
   }
 
   function removeFromCart(index){
@@ -493,34 +623,6 @@
       btn.addEventListener('click', e => {
         const idx = parseInt(e.currentTarget.getAttribute('data-index'));
         removeFromCart(idx);
-      });
-    });
-  }
-
-  function attachAddListeners(){
-    document.querySelectorAll('.add-to-cart').forEach(btn => {
-      btn.addEventListener('click', e => {
-        const id = parseInt(btn.getAttribute('data-id'));
-        addToCart(id);
-        renderCartItems();
-      });
-    });
-  }
-
-  function attachQtyListeners(){
-    document.querySelectorAll('.qty-btn').forEach(btn => {
-      btn.addEventListener('click', e => {
-        const id = parseInt(btn.getAttribute('data-id'));
-        const action = btn.getAttribute('data-action');
-        const product = products.find(p => p.id === id);
-        const qtyInput = document.getElementById(`qty-${id}`);
-        let currentQty = parseInt(qtyInput.value);
-        
-        if(action === 'increase' && currentQty < product.qtyAvailable) {
-          qtyInput.value = currentQty + 1;
-        } else if(action === 'decrease' && currentQty > 1) {
-          qtyInput.value = currentQty - 1;
-        }
       });
     });
   }
